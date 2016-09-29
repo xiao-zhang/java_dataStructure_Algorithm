@@ -288,6 +288,5 @@ public class TreeTest {
 		treeTest.clear(b);
 		b = null;
 	}
-
 	
 }
