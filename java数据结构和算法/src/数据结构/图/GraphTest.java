@@ -22,7 +22,7 @@ public class GraphTest {
 		char EstartV,EendV;
 		System.out.println("输入图的各个顶点:");
 		for (i = 0; i < G.vertexNum; i ++){
-			System.out.printf("第%d个顶点:"+(i+1));
+			System.out.printf("第%d个顶点:",(i+1));
 			G.vertex[i] = (input.next().toCharArray())[0];
 		}
 		System.out.println("输入构成各边的顶点的权值：");
@@ -57,7 +57,7 @@ public class GraphTest {
 		}
 		System.out.println();
 		for (i = 0; i < G.vertexNum; i++){
-			System.out.printf("%c", G.vertex[i]);
+			System.out.printf("%c\t", G.vertex[i]);
 			for (j = 0; j < G.vertexNum; j ++){
 				if (G.edgeWeight[i][j] != G.MAXVALUE){
 					System.out.printf("%d\t",G.edgeWeight[i][j]);
@@ -96,33 +96,43 @@ public class GraphTest {
 		System.out.println();
 	}
 	
+	//根据顶点的值返回其在矩阵中的下标位置
+	static int findPosByKey(Graph G, char c){
+		int temp = -1;
+		for (int i = 0; i < G.vertexNum; i++){
+			if (c == G.vertex[i]){
+				temp = i;
+				break;
+			}
+		}
+		return temp;
+	}
+	
 	//广度优先遍历
 	static void bFirstTra(Graph G, char c){
-		int i,j,k;
-		int t = -1;
-		char []q = new char[G.vertexNum];
+		int i,j,t;
+		char []q = new char[G.MAXNUM];
 		int head = 0;
 		int tail = 0;
 		for (i = 0; i < G.vertexNum; i ++){
 			G.isTraverse[i] = 0;
 		}
-		for (k = 0; k < G.vertexNum; k++){
-			if (c == G.vertex[k]){
-				t = k;
-			}
-		}
-		if (t != -1){
-			tail = (tail+1)%(G.MAXNUM);
-			q[tail] = G.vertex[t];
-		}
-		while (head != tail){
-			head = (head + 1)%(G.MAXNUM);
-			G.isTraverse[t] = 1;
-			System.out.printf("->%c",q[head]);
-			for (j = 0; j < G.vertexNum; j++){
-				if (G.edgeWeight[t][j] != G.MAXVALUE && G.isTraverse[j] == 0){
-					tail = (tail + 1)%(G.MAXNUM);
-					q[tail] = G.vertex[j];
+		for (t = 0; t < G.vertexNum; t++){
+			if (G.isTraverse[t] == 0){
+				tail = (tail+1)%(G.MAXNUM);
+				q[tail] = G.vertex[t];
+				G.isTraverse[t] = 1;
+				while (head != tail){
+					head = (head + 1)%(G.MAXNUM);
+					int temp = findPosByKey(G, q[head]);
+					System.out.printf("->%c",q[head]);
+					for (j = 0; j < G.vertexNum; j++){
+						if (G.edgeWeight[temp][j] != G.MAXVALUE && G.isTraverse[j] == 0){
+							tail = (tail + 1)%(G.MAXNUM);
+							q[tail] = G.vertex[j];
+							G.isTraverse[j] = 1;
+						}
+					}
 				}
 			}
 		}
